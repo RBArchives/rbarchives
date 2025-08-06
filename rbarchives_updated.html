@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ravie - Motion Design Studio</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #000;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            background: rgba(0, 0, 0, 0.9);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 400;
+            transition: opacity 0.3s ease;
+        }
+
+        nav a:hover {
+            opacity: 0.7;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            padding: 120px 40px 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .hero-content {
+            max-width: 800px;
+        }
+
+        .hero h1 {
+            font-size: clamp(36px, 6vw, 80px);
+            font-weight: 400;
+            line-height: 1.1;
+            margin-bottom: 40px;
+            color: #fff;
+        }
+
+        .hero h1 em {
+            font-style: italic;
+            font-weight: 300;
+        }
+
+        .hero-description {
+            font-size: 16px;
+            font-weight: 400;
+            margin-bottom: 20px;
+            opacity: 0.8;
+            max-width: 600px;
+        }
+
+        .new-business {
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .new-business a {
+            color: #ff4444;
+            text-decoration: underline;
+            text-decoration-thickness: 1px;
+        }
+
+        .new-business a:hover {
+            opacity: 0.7;
+        }
+
+        /* Video Section */
+        .video-section {
+            position: relative;
+            height: 60vh;
+            overflow: hidden;
+            background: linear-gradient(135deg, #ff6b35, #f7931e, #ffcc02);
+        }
+
+        .video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: flex-end;
+            padding: 40px;
+        }
+
+        .watch-reel {
+            color: #fff;
+            font-size: 24px;
+            font-weight: 500;
+            text-decoration: underline;
+            text-decoration-thickness: 2px;
+            text-underline-offset: 4px;
+        }
+
+        .play-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .play-icon:hover {
+            background: rgba(255, 255, 255, 1);
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        .play-icon::after {
+            content: '▶';
+            font-size: 24px;
+            color: #000;
+            margin-left: 4px;
+        }
+
+        /* Portfolio Section */
+        .portfolio {
+            padding: 40px;
+            background: #000;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .portfolio-item {
+            position: relative;
+            aspect-ratio: 16/9;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .portfolio-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .portfolio-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .portfolio-item video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .portfolio-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
+            padding: 20px;
+            color: #fff;
+        }
+
+        .portfolio-title {
+            font-size: 18px;
+            font-weight: 500;
+            margin: 0;
+            line-height: 1.3;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 2000;
+            overflow-y: auto;
+        }
+
+        .modal.active {
+            display: block;
+        }
+
+        .modal-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: #fff;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .modal-title {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        .modal-subtitle {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.7);
+            font-style: italic;
+        }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            height: 60vh;
+            background: linear-gradient(45deg, #ff6b35, #f7931e, #ffcc02, #ff6b9d);
+            background-size: 400% 400%;
+            animation: gradientShift 8s ease infinite;
+            overflow: hidden;
+            margin-bottom: 40px;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .video-placeholder {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .large-play-button {
+            width: 100px;
+            height: 100px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0 auto 20px;
+        }
+
+        .large-play-button:hover {
+            background: rgba(255, 255, 255, 1);
+            transform: scale(1.1);
+        }
+
+        .large-play-button::after {
+            content: '▶';
+            font-size: 36px;
+            color: #000;
+            margin-left: 6px;
+        }
+
+        .video-placeholder p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .stat-item {
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 20px;
+        }
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: 700;
+            color: #ff6b35;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .project-description {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .project-description h3 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: #ff6b35;
+        }
+
+        .project-description p {
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 15px;
+        }
+
+        /* Contact Section */
+        .contact {
+            padding: 80px 40px;
+            background: #111;
+        }
+
+        .contact-grid {
+            display: flex;
+            justify-content: center;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .office h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .office p {
+            font-size: 16px;
+            margin-bottom: 12px;
+            line-height: 1.6;
+            opacity: 0.8;
+        }
+
+        .office a {
+            color: #ff4444;
+            text-decoration: none;
+        }
+
+        .office a:hover {
+            text-decoration: underline;
+        }
+
+        /* Mobile Styles */
+        @media (max-width: 768px) {
+            header {
+                padding: 20px;
+            }
+
+            nav ul {
+                gap: 20px;
+            }
+
+            .hero {
+                padding: 100px 20px 40px;
+            }
+
+            .hero h1 {
+                font-size: 40px;
+            }
+
+            .portfolio-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .video-overlay {
+                padding: 20px;
+            }
+
+            .watch-reel {
+                font-size: 20px;
+            }
+
+            .contact {
+                padding: 60px 20px;
+            }
+
+            .modal-content {
+                padding: 20px 10px;
+            }
+
+            .modal-title {
+                font-size: 24px;
+            }
+
+            .video-container {
+                height: 40vh;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+        }
+
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Hide scrollbar */
+        ::-webkit-scrollbar {
+            width: 0px;
+            background: transparent;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">RBArchives</div>
+        <nav>
+            <ul>
+                <li><a href="#home">Work</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>We turn <em>YOUR personality</em> into a brand.</h1>
+            <p class="hero-description">RBArchives is the way for players and sports teams to build a cult following through representing their personality in various media forms.</p>
+            <p class="new-business"><strong>New Business:</strong> <a href="mailto:bansal.ryan77@gmail.com">bansal.ryan77@gmail.com</a></p>
+        </div>
+    </section>
+
+    <section class="video-section">
+        <div class="video-overlay">
+            <div class="watch-reel">Watch Reel</div>
+            <div class="play-icon"></div>
+        </div>
+    </section>
+
+    <section class="portfolio">
+        <div class="portfolio-grid">
+            <!-- Project 1 -->
+            <div class="portfolio-item" data-project="anthony-edwards">
+                <video muted loop>
+                    <source src="path/to/your/anthony-edwards-preview.mp4" type="video/mp4">
+                    <!-- Fallback image if video doesn't load -->
+                    <img src="https://images.unsplash.com/photo-1546519638-68e109498ffc?w=800&h=600&fit=crop" alt="Anthony Edwards X The Prowler">
+                </video>
+                <div class="portfolio-overlay">
+                    <h3 class="portfolio-title">Anthony Edwards X The Prowler</h3>
+                </div>
+            </div>
+            
+            <!-- Project 2 -->
+            <div class="portfolio-item" data-project="donovan-mitchell">
+                <video muted loop>
+                    <source src="path/to/your/donovan-mitchell-preview.mp4" type="video/mp4">
+                    <!-- Fallback image if video doesn't load -->
+                    <img src="https://images.unsplash.com/photo-1608245449230-4ac19066d2d0?w=800&h=600&fit=crop" alt="Donovan Mitchell X Peter Parker">
+                </video>
+                <div class="portfolio-overlay">
+                    <h3 class="portfolio-title">Donovan Mitchell X Peter Parker</h3>
+                </div>
+            </div>
+
+            <!-- Project 3 -->
+            <div class="portfolio-item" data-project="kawhi-leonard">
+                <video muted loop>
+                    <source src="path/to/your/kawhi-leonard-preview.mp4" type="video/mp4">
+                    <!-- Fallback image if video doesn't load -->
+                    <img src="https://images.unsplash.com/photo-1574623452334-1e0ac2b3ccb4?w=800&h=600&fit=crop" alt="Kawhi Leonard X Spider Noir">
+                </video>
+                <div class="portfolio-overlay">
+                    <h3 class="portfolio-title">Kawhi Leonard X Spider Noir</h3>
+                </div>
+            </div>
+
+            <!-- Add more projects here and they'll automatically wrap to new rows -->
+        </div>
+    </section>
+
+    <section id="contact" class="contact">
+        <div class="contact-grid">
+            <div class="office">
+                <h3>Get In Touch</h3>
+                <p>Ready to turn your personality into a brand?</p>
+                <p><strong>Ryan Bansal</strong><br>Founder & Creative Director</p>
+                <p><a href="mailto:bansal.ryan77@gmail.com">bansal.ryan77@gmail.com</a></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal -->
+    <div id="projectModal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">Project Title</h2>
+                <p class="modal-subtitle" id="modalSubtitle">Creative collaboration bringing personality to life</p>
+            </div>
+
+            <div class="video-container">
+                <div class="video-placeholder">
+                    <div class="large-play-button"></div>
+                    <p>Click to watch the full project</p>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number" id="viewCount">1.2M+</div>
+                    <div class="stat-label">Views on Launch Week</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="engagement">850K</div>
+                    <div class="stat-label">Engagements Generated</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="reach">5.8M</div>
+                    <div class="stat-label">Total Reach</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="duration">3 Weeks</div>
+                    <div class="stat-label">Production Time</div>
+                </div>
+            </div>
+
+            <div class="project-description">
+                <h3>Project Overview</h3>
+                <p id="projectOverview">This collaboration merged the explosive energy of Anthony Edwards with the mysterious allure of The Prowler, creating a visual narrative that captures both the athlete's dynamic playing style and the character's stealthy precision.</p>
+                <p>Our team worked closely with the client to develop a concept that would resonate with both basketball fans and comic book enthusiasts, resulting in a piece that generated massive engagement across all platforms.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Project data
+        const projectData = {
+            'anthony-edwards': {
+                title: 'Anthony Edwards X The Prowler',
+                subtitle: 'Explosive energy meets mysterious precision',
+                views: '1.2M+',
+                engagement: '850K',
+                reach: '5.8M',
+                duration: '3 Weeks',
+                overview: 'This collaboration merged the explosive energy of Anthony Edwards with the mysterious allure of The Prowler, creating a visual narrative that captures both the athlete\'s dynamic playing style and the character\'s stealthy precision.'
+            },
+            'donovan-mitchell': {
+                title: 'Donovan Mitchell X Peter Parker',
+                subtitle: 'Web-slinging meets crossover moves',
+                views: '2.1M+',
+                engagement: '1.2M',
+                reach: '8.3M',
+                duration: '4 Weeks',
+                overview: 'Combining Donovan Mitchell\'s acrobatic skills with Spider-Man\'s web-slinging abilities, this project showcased the parallels between basketball finesse and superhero agility, creating viral content that resonated across multiple demographics.'
+            },
+            'kawhi-leonard': {
+                title: 'Kawhi Leonard X Spider Noir',
+                subtitle: 'Silent precision in black and white',
+                views: '950K+',
+                engagement: '680K',
+                reach: '4.2M',
+                duration: '5 Weeks',
+                overview: 'This noir-inspired collaboration captured Kawhi Leonard\'s quiet intensity and clutch performance through the lens of Spider Noir\'s shadowy world, emphasizing the beauty of calculated precision in both basketball and detective work.'
+            }
+        };
+
+        // Auto-play video previews on hover
+        document.querySelectorAll('.portfolio-item video').forEach(video => {
+            const portfolioItem = video.closest('.portfolio-item');
+            
+            portfolioItem.addEventListener('mouseenter', () => {
+                video.play();
+            });
+            
+            portfolioItem.addEventListener('mouseleave', () => {
+                video.pause();
+                video.currentTime = 0; // Reset to beginning
+            });
+        });
+
+        // Smooth reveal animations on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe elements for animation
+        document.querySelectorAll('.portfolio-item, .office').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+            observer.observe(el);
+        });
+
+        // Play button click
+        document.querySelector('.play-icon').addEventListener('click', () => {
+            alert('Main reel video player would open here');
+        });
+
+        // Portfolio item clicks - Open modal
+        document.querySelectorAll('.portfolio-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const projectKey = item.dataset.project;
+                const project = projectData[projectKey];
+                
+                if (project) {
+                    document.getElementById('modalTitle').textContent = project.title;
+                    document.getElementById('modalSubtitle').textContent = project.subtitle;
+                    document.getElementById('viewCount').textContent = project.views;
+                    document.getElementById('engagement').textContent = project.engagement;
+                    document.getElementById('reach').textContent = project.reach;
+                    document.getElementById('duration').textContent = project.duration;
+                    document.getElementById('projectOverview').textContent = project.overview;
+                    
+                    document.getElementById('projectModal').classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                }
+            });
+        });
+
+        // Close modal function
+        function closeModal() {
+            document.getElementById('projectModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close modal when clicking outside content
+        document.getElementById('projectModal').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) {
+                closeModal();
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        // Large play button in modal
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('large-play-button')) {
+                alert('Full project video would play here');
+            }
+        });
+    </script>
+</body>
+</html>
